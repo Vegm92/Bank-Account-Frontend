@@ -1,5 +1,36 @@
 # Bank-Account-Frontend
 
+# Setup (Vite)
+
+## Environment Variables
+
+For local development:
+
+1. Copy `.env.example` to `.env`
+2. Update the values in `.env` as needed
+
+For production deployment:
+
+1. Set up a GitHub Secret named `VITE_API_URL` with your production API URL
+2. Ensure Netlify is configured to use this secret (see Deployment section)
+
+## Installation
+
+1. Clone the repository
+2. Run `npm install` to install dependencies
+3. Set up the `.env` file as described above
+4. Run `npm run dev` to start the development server
+
+## Deployment
+
+The project is set up for deployment on Netlify:
+
+1. Ensure you have a GitHub Secret named `VITE_API_URL` set to your production API URL
+2. In Netlify, link the `VITE_API_URL` environment variable to the GitHub Secret
+3. Netlify will automatically use the correct API URL during build and deployment
+
+Note: The `netlify.toml` file in the repository root configures the build settings and environment variable usage for Netlify.
+
 ## components
 
 - **Card.tsx**: Reusable component for displaying content in a card layout.
