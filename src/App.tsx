@@ -7,7 +7,7 @@ import Statement from "./pages/Statement";
 import { CssBaseline } from "@mui/material";
 import Transfer from "./pages/Transfer";
 
-function App() {
+const App: React.FC = () => {
   return (
     <Router>
       <CssBaseline />
@@ -21,6 +21,6 @@ function App() {
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;

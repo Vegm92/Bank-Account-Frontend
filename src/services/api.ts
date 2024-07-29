@@ -3,6 +3,8 @@ import { getOrCreateIBAN } from "../utils/ibanUtils";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
+console.log("VITE_API_URL: ", API_URL);
+
 type Transaction = {
   type: string;
   date: string;
