@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { getAccountInfo, transfer, getOtherIBANs } from "../services/api";
 import { validateIBAN } from "../utils/validators";
+import { getAccountInfo, getOtherIBANs, transfer } from "../services/api";
 
 interface AccountInfo {
   iban: string;

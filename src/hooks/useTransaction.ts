@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { deposit, withdraw, getAccountInfo } from "../services/api";
+import { deposit, getAccountInfo, withdraw } from "../services/api";
 
 type TransactionType = "Deposit" | "Withdraw";
 
