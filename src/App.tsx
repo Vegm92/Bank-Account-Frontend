@@ -1,21 +1,26 @@
-import "./App.css";
-import { BrowserRouter as Router, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navigation from "./components/Navigation";
+import Home from "./pages/Home";
+import Deposit from "./pages/Deposit";
+import Withdraw from "./pages/Withdraw";
+import Statement from "./pages/Statement";
+import { CssBaseline } from "@mui/material";
+import Transfer from "./pages/Transfer";
 
 function App() {
   return (
     <Router>
-      <div>
-        <Navigation />
-        <Routes>
-          {/*   <Route path='/' element={<Home />} />
-          <Route path='/deposit' element={<Deposit />} />
-          <Route path='/withdraw' element={<Withdraw />} />
-          <Route path='/transfer' element={<Transfer />} />
-          <Route path='/statement' element={<Statement />} /> */}
-        </Routes>
-      </div>
+      <CssBaseline />
+      <Navigation />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/deposit" element={<Deposit />} />
+        <Route path="/withdraw" element={<Withdraw />} />
+        <Route path="/statement" element={<Statement />} />
+        <Route path="/transfer" element={<Transfer />} />
+      </Routes>
     </Router>
   );
 }
+
 export default App;
