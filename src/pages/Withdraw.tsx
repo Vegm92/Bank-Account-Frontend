@@ -2,7 +2,7 @@ import React from "react";
 import { Grid } from "@mui/material";
 import TransactionForm from "../components/TransactionForm";
 
-const Deposit: React.FC = () => {
+const Withdraw: React.FC = () => {
   return (
     <Grid
       container
@@ -12,9 +12,9 @@ const Deposit: React.FC = () => {
       textAlign="center"
       sx={{ p: 4 }}
     >
-      <TransactionForm type="Deposit" />
+      <TransactionForm type="Withdraw" />
     </Grid>
   );
 };
 
-export default Deposit;
+export default Withdraw;
