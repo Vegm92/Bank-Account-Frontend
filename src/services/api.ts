@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getOrCreateIBAN } from "../utils/ibanUtils";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const API_URL = import.meta.env.VITE_API_URL;
 
 console.log("VITE_API_URL: ", API_URL);
 
@@ -18,13 +18,17 @@ type ApiResponse<T> = {
   data?: T;
 };
 
+export const api = axios.create({
+  baseURL: API_URL,
+});
+
 export const deposit = async (
   amount: number
 ): Promise<ApiResponse<{ balance: number }>> => {
   const iban = getOrCreateIBAN();
   try {
-    const response = await axios.post<ApiResponse<{ balance: number }>>(
-      `${API_URL}/accounts/deposit`,
+    const response = await api.post<ApiResponse<{ balance: number }>>(
+      "/accounts/deposit",
       { amount, iban }
     );
     return response.data;
@@ -41,11 +45,10 @@ export const withdraw = async (
 ): Promise<ApiResponse<{ balance: number }>> => {
   const iban = getOrCreateIBAN();
   try {
-    const response = await axios.post<ApiResponse<{ balance: number }>>(
-      `${API_URL}/accounts/withdraw`,
+    const response = await api.post<ApiResponse<{ balance: number }>>(
+      "/accounts/withdraw",
       { amount, iban }
     );
-
     return response.data;
   } catch (error) {
     return {
@@ -61,8 +64,8 @@ export const transfer = async (
 ): Promise<ApiResponse<{ balance: number }>> => {
   const senderIBAN = getOrCreateIBAN();
   try {
-    const response = await axios.post<ApiResponse<{ balance: number }>>(
-      `${API_URL}/accounts/transfer`,
+    const response = await api.post<ApiResponse<{ balance: number }>>(
+      "/accounts/transfer",
       { amount, senderIBAN, recipientIBAN }
     );
     return response.data;
@@ -77,8 +80,8 @@ export const transfer = async (
 export const getStatement = async (): Promise<ApiResponse<Transaction[]>> => {
   const iban = getOrCreateIBAN();
   try {
-    const response = await axios.get<ApiResponse<Transaction[]>>(
-      `${API_URL}/accounts/statement`,
+    const response = await api.get<ApiResponse<Transaction[]>>(
+      "/accounts/statement",
       { params: { iban } }
     );
     return response.data;
@@ -97,8 +100,8 @@ export const getAccountInfo = async (): Promise<{
 }> => {
   const iban = getOrCreateIBAN();
   try {
-    const response = await axios.get<ApiResponse<{ balance: number }>>(
-      `${API_URL}/accounts/account-info`,
+    const response = await api.get<ApiResponse<{ balance: number }>>(
+      "/accounts/account-info",
       { params: { iban } }
     );
     if (response.data.success && response.data.data) {
@@ -116,8 +119,8 @@ export const getAccountInfo = async (): Promise<{
 export const getOtherIBANs = async (): Promise<string[]> => {
   const currentIBAN = getOrCreateIBAN();
   try {
-    const response = await axios.get<{ success: boolean; data: string[] }>(
-      `${API_URL}/accounts/other-ibans`,
+    const response = await api.get<{ success: boolean; data: string[] }>(
+      "/accounts/other-ibans",
       {
         params: { currentIBAN },
       }
