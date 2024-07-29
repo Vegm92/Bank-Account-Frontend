@@ -54,7 +54,7 @@ const Home: React.FC = () => {
             </Typography>
             <Typography variant="body1">IBAN: {accountInfo.iban}</Typography>
             <Typography variant="body1">
-              Current Balance: ${accountInfo.balance.toFixed(2)}
+              Current Balance: {accountInfo.balance.toFixed(2)}€
             </Typography>
             <Button
               component={Link}

@@ -35,8 +35,8 @@ export function useTransaction(type: TransactionType) {
       if (response.success) {
         setSuccess(
           `Successfully ${
-            type === "Deposit" ? "deposited" : "withdrew"
-          } $${amount}`
+            type === "Deposit" ? "Deposited" : "Withdrew"
+          } ${amount}€`
         );
         setAmount("");
         await refreshBalance();
