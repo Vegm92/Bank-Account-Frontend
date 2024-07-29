@@ -28,7 +28,7 @@ export const deposit = async (
   const iban = getOrCreateIBAN();
   try {
     const response = await api.post<ApiResponse<{ balance: number }>>(
-      "/accounts/deposit",
+      "api/accounts/deposit",
       { amount, iban }
     );
     return response.data;
@@ -46,7 +46,7 @@ export const withdraw = async (
   const iban = getOrCreateIBAN();
   try {
     const response = await api.post<ApiResponse<{ balance: number }>>(
-      "/accounts/withdraw",
+      "api/accounts/withdraw",
       { amount, iban }
     );
     return response.data;
@@ -65,7 +65,7 @@ export const transfer = async (
   const senderIBAN = getOrCreateIBAN();
   try {
     const response = await api.post<ApiResponse<{ balance: number }>>(
-      "/accounts/transfer",
+      "api/accounts/transfer",
       { amount, senderIBAN, recipientIBAN }
     );
     return response.data;
@@ -81,7 +81,7 @@ export const getStatement = async (): Promise<ApiResponse<Transaction[]>> => {
   const iban = getOrCreateIBAN();
   try {
     const response = await api.get<ApiResponse<Transaction[]>>(
-      "/accounts/statement",
+      "api/accounts/statement",
       { params: { iban } }
     );
     return response.data;
@@ -101,7 +101,7 @@ export const getAccountInfo = async (): Promise<{
   const iban = getOrCreateIBAN();
   try {
     const response = await api.get<ApiResponse<{ balance: number }>>(
-      "/accounts/account-info",
+      "api/accounts/account-info",
       { params: { iban } }
     );
     if (response.data.success && response.data.data) {
@@ -120,7 +120,7 @@ export const getOtherIBANs = async (): Promise<string[]> => {
   const currentIBAN = getOrCreateIBAN();
   try {
     const response = await api.get<{ success: boolean; data: string[] }>(
-      "/accounts/other-ibans",
+      "api/accounts/other-ibans",
       {
         params: { currentIBAN },
       }
