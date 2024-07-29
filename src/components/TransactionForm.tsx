@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { TextField, Button, Typography, Grid } from "@mui/material";
+import { TextField, Button, Typography, Grid, Alert } from "@mui/material";
 
 import { useTransaction } from "../hooks/useTransaction";
 import Card from "./Card";
@@ -32,7 +32,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ type }) => {
     <Card title={`${type} Funds`}>
       {balance !== null && (
         <Typography variant="subtitle1" gutterBottom>
-          Current Balance: ${balance.toFixed(2)}
+          Current Balance: {balance.toFixed(2)} €
         </Typography>
       )}
       <Grid component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
@@ -53,14 +53,14 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ type }) => {
           {type === "Deposit" ? "Deposit" : "Withdraw"}
         </Button>
         {error && (
-          <Typography color="error" sx={{ mt: 2 }}>
+          <Alert severity="error" sx={{ mt: 2 }}>
             {error}
-          </Typography>
+          </Alert>
         )}
         {success && (
-          <Typography color="success" sx={{ mt: 2 }}>
+          <Alert severity="success" sx={{ mt: 2 }}>
             {success}
-          </Typography>
+          </Alert>
         )}
       </Grid>
     </Card>

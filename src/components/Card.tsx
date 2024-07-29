@@ -46,7 +46,7 @@ const Card: React.FC<CardFormProps> = ({ title, subtitle, children }) => {
           )}
           <Paper
             elevation={3}
-            sx={{ p: isMobile ? 0 : 2, mt: 3, width: "100%" }}
+            sx={{ p: isMobile ? 1 : 2, mt: 3, width: "100%" }}
           >
             {children}
           </Paper>

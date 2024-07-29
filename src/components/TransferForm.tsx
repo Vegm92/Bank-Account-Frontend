@@ -32,7 +32,7 @@ const TransferForm: React.FC = () => {
       title="Transfer Funds"
       subtitle={
         accountInfo
-          ? `Current Balance: $${accountInfo.balance.toFixed(2)}`
+          ? `Current Balance: ${accountInfo.balance.toFixed(2)} €`
           : undefined
       }
     >
@@ -52,7 +52,7 @@ const TransferForm: React.FC = () => {
               Known IBANs for testing:
             </Typography>
             <Box display="flex" flexWrap="wrap" gap={1}>
-              {otherIBANs.map((iban) => (
+              {otherIBANs.slice(0, 3).map((iban) => (
                 <Chip
                   key={iban}
                   label={iban}
