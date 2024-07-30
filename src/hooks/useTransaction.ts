@@ -39,7 +39,15 @@ export function useTransaction(type: TransactionType) {
           } ${amount}€`
         );
         setAmount("");
-        await refreshBalance();
+        if (
+          response.data?.balance !== null &&
+          response.data?.balance !== undefined
+        ) {
+          setBalance(response.data.balance);
+          console.log("Balance updated:", response.data.balance);
+        } else {
+          setError("Failed to update balance");
+        }
       } else {
         setError(response.message);
       }
