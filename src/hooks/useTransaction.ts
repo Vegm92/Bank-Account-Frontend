@@ -9,6 +9,15 @@ export function useTransaction(type: TransactionType) {
   const [success, setSuccess] = useState<string>("");
   const [balance, setBalance] = useState<number | null>(null);
 
+  const refreshBalance = async () => {
+    try {
+      const accountInfo = await getAccountInfo();
+      setBalance(accountInfo.balance);
+    } catch (err) {
+      setError("Failed to update balance");
+    }
+  };
+
   const handleTransaction = async () => {
     setError("");
     setSuccess("");
@@ -17,6 +26,7 @@ export function useTransaction(type: TransactionType) {
 
     if (isNaN(transactionAmount) || transactionAmount <= 0) {
       setError("Please enter a valid positive number");
+
       return;
     }
 
@@ -39,29 +49,16 @@ export function useTransaction(type: TransactionType) {
           } ${amount}€`
         );
         setAmount("");
-        if (
-          response.data?.balance !== null &&
-          response.data?.balance !== undefined
-        ) {
+        if (response.data && typeof response.data.balance === "number") {
           setBalance(response.data.balance);
-          console.log("Balance updated:", response.data.balance);
         } else {
-          setError("Failed to update balance");
+          await refreshBalance();
         }
       } else {
         setError(response.message);
       }
     } catch (err) {
       setError(`An error occurred while processing your ${type}.`);
-    }
-  };
-
-  const refreshBalance = async () => {
-    try {
-      const accountInfo = await getAccountInfo();
-      setBalance(accountInfo.balance);
-    } catch (err) {
-      setError("Failed to fetch account balance");
     }
   };
 
