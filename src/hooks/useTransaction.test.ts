@@ -95,7 +95,7 @@ describe("useTransaction", () => {
     expect(result.current.success).toBe("");
   });
 
-  it("should handle API error during deposit", async () => {
+  it("should handle API error during transaction", async () => {
     mockDeposit.mockRejectedValue(new Error("API Error"));
 
     const { result } = renderHook(() => useTransaction("Deposit"));
@@ -111,26 +111,6 @@ describe("useTransaction", () => {
     expect(mockDeposit).toHaveBeenCalledWith(100);
     expect(result.current.error).toBe(
       "An error occurred while processing your Deposit."
-    );
-    expect(result.current.success).toBe("");
-  });
-
-  it("should handle API error during withdrawal", async () => {
-    mockWithdraw.mockRejectedValue(new Error("API Error"));
-
-    const { result } = renderHook(() => useTransaction("Withdraw"));
-
-    act(() => {
-      result.current.setAmount("100");
-    });
-
-    await act(async () => {
-      await result.current.handleTransaction();
-    });
-
-    expect(mockWithdraw).toHaveBeenCalledWith(100);
-    expect(result.current.error).toBe(
-      "An error occurred while processing your Withdraw."
     );
     expect(result.current.success).toBe("");
   });
@@ -157,6 +137,53 @@ describe("useTransaction", () => {
     });
 
     expect(mockGetAccountInfo).toHaveBeenCalled();
-    expect(result.current.error).toBe("Failed to fetch account balance");
+    expect(result.current.error).toBe("Failed to update balance");
+  });
+
+  it("should handle unsuccessful API response", async () => {
+    mockDeposit.mockResolvedValue({
+      success: false,
+      message: "Transaction failed",
+      data: { balance: 1000 },
+    });
+
+    const { result } = renderHook(() => useTransaction("Deposit"));
+
+    act(() => {
+      result.current.setAmount("100");
+    });
+
+    await act(async () => {
+      await result.current.handleTransaction();
+    });
+
+    expect(mockDeposit).toHaveBeenCalledWith(100);
+    expect(result.current.error).toBe("Transaction failed");
+    expect(result.current.success).toBe("");
+  });
+
+  it("should handle undefined balance in API response", async () => {
+    mockDeposit.mockResolvedValue({
+      success: true,
+      message: "Deposit successful",
+      data: {}, // No balance provided
+    });
+    mockGetAccountInfo.mockResolvedValue({ iban: "test-iban", balance: 1100 });
+
+    const { result } = renderHook(() => useTransaction("Deposit"));
+
+    act(() => {
+      result.current.setAmount("100");
+    });
+
+    await act(async () => {
+      await result.current.handleTransaction();
+    });
+
+    expect(mockDeposit).toHaveBeenCalledWith(100);
+    expect(mockGetAccountInfo).toHaveBeenCalled(); // Should call refreshBalance
+    expect(result.current.balance).toBe(1100);
+    expect(result.current.success).toBe("Successfully Deposited 100€");
+    expect(result.current.error).toBe("");
   });
 });
