@@ -7,9 +7,6 @@ export interface Transaction {
   balance?: number;
   type?: string;
 }
-
-export interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data?: T;
+export interface TransactionResponse {
+  balance?: number;
 }
