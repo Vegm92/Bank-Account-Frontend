@@ -1,27 +1,9 @@
 import { useState, useEffect } from "react";
 import { validateIBAN } from "../utils/validators";
 import { getAccountInfo, getOtherIBANs, transfer } from "../services/api";
+import { AccountInfo } from "../types/accountInfo";
 
-interface AccountInfo {
-  iban: string;
-  balance: number;
-}
-
-interface UseTransferReturn {
-  accountInfo: AccountInfo | null;
-  recipientIBAN: string;
-  amount: string;
-  error: string | null;
-  success: string | null;
-  loading: boolean;
-  otherIBANs: string[];
-  handleSubmit: (e: React.FormEvent) => Promise<void>;
-  setRecipientIBAN: (iban: string) => void;
-  setAmount: (amount: string) => void;
-  handleIBANClick: (iban: string) => void;
-}
-
-export const useTransfer = (): UseTransferReturn => {
+export const useTransfer = () => {
   const [accountInfo, setAccountInfo] = useState<AccountInfo | null>(null);
   const [recipientIBAN, setRecipientIBAN] = useState("");
   const [amount, setAmount] = useState("");
@@ -77,8 +59,19 @@ export const useTransfer = (): UseTransferReturn => {
         );
         setAmount("");
         setRecipientIBAN("");
-        const updatedInfo = await getAccountInfo();
-        setAccountInfo(updatedInfo);
+
+        // Update account info
+        if (response.data && typeof response.data.balance === "number") {
+          setAccountInfo((prevInfo) =>
+            prevInfo
+              ? { ...prevInfo, balance: response.data!.balance ?? 0 }
+              : null
+          );
+        } else {
+          // If we don't get a balance in the response, fetch updated account info
+          const updatedInfo = await getAccountInfo();
+          setAccountInfo(updatedInfo);
+        }
       } else {
         setError(response.message || "Transfer failed");
       }

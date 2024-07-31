@@ -1,22 +1,12 @@
 import axios from "axios";
 import { getOrCreateIBAN } from "../utils/ibanUtils";
+import { ApiResponse } from "../types/api";
+import { TransactionResponse } from "../types/transaction";
+import { AccountInfo } from "../types/accountInfo";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 console.log("VITE_API_URL: ", API_URL);
-
-type Transaction = {
-  type: string;
-  date: string;
-  amount: number;
-  balance: number;
-};
-
-type ApiResponse<T> = {
-  success: boolean;
-  message: string;
-  data?: T;
-};
 
 export const api = axios.create({
   baseURL: API_URL,
@@ -24,10 +14,10 @@ export const api = axios.create({
 
 export const deposit = async (
   amount: number
-): Promise<ApiResponse<{ balance: number }>> => {
+): Promise<ApiResponse<TransactionResponse>> => {
   const iban = getOrCreateIBAN();
   try {
-    const response = await api.post<ApiResponse<{ balance: number }>>(
+    const response = await api.post<ApiResponse<TransactionResponse>>(
       "api/accounts/deposit",
       { amount, iban }
     );
@@ -42,10 +32,10 @@ export const deposit = async (
 
 export const withdraw = async (
   amount: number
-): Promise<ApiResponse<{ balance: number }>> => {
+): Promise<ApiResponse<TransactionResponse>> => {
   const iban = getOrCreateIBAN();
   try {
-    const response = await api.post<ApiResponse<{ balance: number }>>(
+    const response = await api.post<ApiResponse<TransactionResponse>>(
       "api/accounts/withdraw",
       { amount, iban }
     );
@@ -61,10 +51,10 @@ export const withdraw = async (
 export const transfer = async (
   amount: number,
   recipientIBAN: string
-): Promise<ApiResponse<{ balance: number }>> => {
+): Promise<ApiResponse<TransactionResponse>> => {
   const senderIBAN = getOrCreateIBAN();
   try {
-    const response = await api.post<ApiResponse<{ balance: number }>>(
+    const response = await api.post<ApiResponse<TransactionResponse>>(
       "api/accounts/transfer",
       { amount, senderIBAN, recipientIBAN }
     );
@@ -72,15 +62,17 @@ export const transfer = async (
   } catch (error) {
     return {
       success: false,
-      message: "An error occurred while processing the transfer",
+      message: `Sender or recipient account not found.`,
     };
   }
 };
 
-export const getStatement = async (): Promise<ApiResponse<Transaction[]>> => {
+export const getStatement = async (): Promise<
+  ApiResponse<TransactionResponse[]>
+> => {
   const iban = getOrCreateIBAN();
   try {
-    const response = await api.get<ApiResponse<Transaction[]>>(
+    const response = await api.get<ApiResponse<TransactionResponse[]>>(
       "api/accounts/statement",
       { params: { iban } }
     );
@@ -94,18 +86,15 @@ export const getStatement = async (): Promise<ApiResponse<Transaction[]>> => {
   }
 };
 
-export const getAccountInfo = async (): Promise<{
-  iban: string;
-  balance: number;
-}> => {
+export const getAccountInfo = async (): Promise<AccountInfo> => {
   const iban = getOrCreateIBAN();
   try {
-    const response = await api.get<ApiResponse<{ balance: number }>>(
+    const response = await api.get<ApiResponse<AccountInfo>>(
       "api/accounts/account-info",
       { params: { iban } }
     );
     if (response.data.success && response.data.data) {
-      return { iban, balance: response.data.data.balance };
+      return response.data.data;
     } else {
       throw new Error(
         response.data.message || "Failed to fetch account information"
@@ -119,13 +108,13 @@ export const getAccountInfo = async (): Promise<{
 export const getOtherIBANs = async (): Promise<string[]> => {
   const currentIBAN = getOrCreateIBAN();
   try {
-    const response = await api.get<{ success: boolean; data: string[] }>(
+    const response = await api.get<ApiResponse<string[]>>(
       "api/accounts/other-ibans",
       {
         params: { currentIBAN },
       }
     );
-    if (response.data.success) {
+    if (response.data.success && response.data.data) {
       return response.data.data;
     } else {
       throw new Error("Failed to fetch other IBANs");

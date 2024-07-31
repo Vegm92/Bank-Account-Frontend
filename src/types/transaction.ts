@@ -8,8 +8,4 @@ export interface Transaction {
   type?: string;
 }
 
-export interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data?: T;
-}
+export type TransactionResponse = Omit<Transaction, "id">;
