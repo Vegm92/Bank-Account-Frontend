@@ -2,15 +2,11 @@ import axios from "axios";
 import { getOrCreateIBAN } from "../utils/ibanUtils";
 import { ApiResponse } from "../types/api";
 import { TransactionResponse } from "../types/transaction";
+import { AccountInfo } from "../types/accountInfo";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 console.log("VITE_API_URL: ", API_URL);
-
-export interface AccountInfo {
-  iban: string;
-  balance: number;
-}
 
 export const api = axios.create({
   baseURL: API_URL,
@@ -66,7 +62,7 @@ export const transfer = async (
   } catch (error) {
     return {
       success: false,
-      message: "An error occurred while processing the transfer",
+      message: `Sender or recipient account not found.`,
     };
   }
 };

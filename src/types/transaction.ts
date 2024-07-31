@@ -7,6 +7,5 @@ export interface Transaction {
   balance?: number;
   type?: string;
 }
-export interface TransactionResponse {
-  balance?: number;
-}
+
+export type TransactionResponse = Omit<Transaction, "id">;
