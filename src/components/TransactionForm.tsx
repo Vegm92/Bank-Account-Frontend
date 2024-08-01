@@ -35,7 +35,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ type }) => {
           Current Balance: {balance.toFixed(2)} €
         </Typography>
       )}
-      <Grid component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+      <Grid component="form" role="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
         <TextField
           label="Amount"
           type="number"
