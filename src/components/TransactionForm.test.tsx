@@ -62,7 +62,7 @@ describe("TransactionForm", () => {
 
     render(<TransactionForm type="Deposit" />);
 
-    const form = screen.getByRole("form");
+    const form = screen.getByLabelText("form");
     fireEvent.submit(form);
 
     await waitFor(() => {
