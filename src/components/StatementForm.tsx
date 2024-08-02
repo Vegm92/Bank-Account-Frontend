@@ -45,6 +45,40 @@ const StatementForm: React.FC = () => {
     },
   ];
 
+  let dataGrid;
+  if (error) {
+    dataGrid = <Typography color="error">{error}</Typography>;
+  } else {
+    const gridProps = {
+      rows: filteredRows,
+      columns: columns,
+      initialState: {
+        pagination: {
+          paginationModel: { page: 0, pageSize: 5 },
+        },
+      },
+      pageSizeOptions: [5, 10, 20],
+      disableRowSelectionOnClick: true,
+    };
+
+    dataGrid = (
+      <Paper
+        sx={{
+          height: 400,
+          width: "100%",
+          padding: isMobile ? 0 : undefined,
+        }}
+      >
+        <DataGrid
+          {...gridProps}
+          sx={{ fontSize: isMobile ? 10 : undefined }}
+          checkboxSelection={!isMobile}
+          disableColumnMenu={isMobile}
+        />
+      </Paper>
+    );
+  }
+
   return (
     <Card title="Account Statement">
       <Box sx={{ minWidth: "280px", overflowX: "hidden" }}>
@@ -56,40 +90,7 @@ const StatementForm: React.FC = () => {
             value={filter}
             onChange={handleFilterChange}
           />
-          {error ? (
-            <Typography color="error">{error}</Typography>
-          ) : isMobile ? (
-            <Paper sx={{ height: 400, width: "100%", padding: 0 }}>
-              <DataGrid
-                rows={filteredRows}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 5 },
-                  },
-                }}
-                pageSizeOptions={[5, 10, 20]}
-                disableRowSelectionOnClick
-                disableColumnMenu={isMobile}
-                sx={{ fontSize: 10 }}
-              />
-            </Paper>
-          ) : (
-            <Paper sx={{ height: 400, width: "100%" }}>
-              <DataGrid
-                rows={filteredRows}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 5 },
-                  },
-                }}
-                pageSizeOptions={[5, 10, 20]}
-                checkboxSelection
-                disableRowSelectionOnClick
-              />
-            </Paper>
-          )}
+          {dataGrid}
         </Grid>
       </Box>
     </Card>
