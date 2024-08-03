@@ -30,7 +30,12 @@ const Home: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <CircularProgress />;
+    return (
+      <Grid justifyContent="center" textAlign="center" sx={{ p: 4, mt: 5 }}>
+        <CircularProgress />
+        <Typography color="gainsboro">it might take a minute...</Typography>
+      </Grid>
+    );
   }
 
   if (error) {
